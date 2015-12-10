@@ -44,6 +44,7 @@ var Select = React.createClass({
 		onBlur: React.PropTypes.func,              // onBlur handler: function (event) {}
 		onChange: React.PropTypes.func,            // onChange handler: function (newValue) {}
 		onFocus: React.PropTypes.func,             // onFocus handler: function (event) {}
+		onSelectionFocus: React.PropTypes.func,    // onSelectionFocus handler: function (event) {}
 		onInputChange: React.PropTypes.func,       // onInputChange handler: function (inputValue) {}
 		onOptionLabelClick: React.PropTypes.func,  // onCLick handler for value labels: function (value, event) {}
 		optionComponent: React.PropTypes.func,     // option component to render in dropdown
@@ -191,6 +192,14 @@ var Select = React.createClass({
 			}
 		}
 	},
+
+  componentWillUpdate: function(nextProps, nextState){
+    if(this.props.onSelectionFocus) {
+      if(nextState.focusedOption && (nextState.focusedOption.value !== (this.state.focusedOption && this.state.focusedOption.value))) {
+        this.props.onSelectionFocus(nextState.focusedOption.value);
+      }
+    }
+  },
 
 	componentDidUpdate () {
 		if (!this.props.disabled && this._focusAfterUpdate) {
