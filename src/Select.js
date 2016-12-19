@@ -90,7 +90,7 @@ const Select = React.createClass({
 		onInputKeyDown: React.PropTypes.func,       // input keyDown handler: function (event) {}
 		onMenuScrollToBottom: React.PropTypes.func, // fires when the menu is scrolled to the bottom; can be used to paginate options
 		onOpen: React.PropTypes.func,               // fires when the menu is opened
-		onSelectionFocus: React.PropTypes.func,
+		onSelectionFocus: React.PropTypes.func,    // onSelectionFocus handler: function (event) {}
 		onValueClick: React.PropTypes.func,         // onClick handler for value labels: function (value, event) {}
 		openAfterFocus: React.PropTypes.bool,       // boolean to enable opening dropdown when focused
 		openOnFocus: React.PropTypes.bool,          // always open options menu on focus
@@ -202,6 +202,12 @@ const Select = React.createClass({
 			this.toggleTouchOutsideEvent(nextState.isOpen);
 			const handler = nextState.isOpen ? nextProps.onOpen : nextProps.onClose;
 			handler && handler();
+    	}
+
+		if(this.props.onSelectionFocus) {
+			if(nextState.focusedOption && (nextState.focusedOption.value !== (this.state.focusedOption && this.state.focusedOption.value))) {
+				this.props.onSelectionFocus(nextState.focusedOption.value);
+			}
 		}
 
 		if(this.props.onSelectionFocus) {
@@ -211,7 +217,37 @@ const Select = React.createClass({
  	  	}
 	},
 
-	componentDidUpdate (prevProps, prevState) {
+	componentDidUpdate () {
+		if (!this.props.disabled && this._focusAfterUpdate) {
+			clearTimeout(this._blurTimeout);
+			clearTimeout(this._focusTimeout);
+			this._focusTimeout = setTimeout(() => {
+				if (!this.isMounted()) return;
+				this.getInputNode().focus();
+				this._focusAfterUpdate = false;
+			}, 50);
+		}
+		if (this._focusedOptionReveal) {
+			if (this.refs.focused && this.refs.menu) {
+				var focusedDOM = ReactDOM.findDOMNode(this.refs.focused);
+				var menuDOM = ReactDOM.findDOMNode(this.refs.menu);
+				var focusedRect = focusedDOM.getBoundingClientRect();
+				var menuRect = menuDOM.getBoundingClientRect();
+
+				if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
+					menuDOM.scrollTop = (focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight);
+				}
+			}
+			this._focusedOptionReveal = false;
+		}
+
+		if (nextState.isOpen !== this.state.isOpen) {
+			this.toggleTouchOutsideEvent(nextState.isOpen);
+			const handler = nextState.isOpen ? nextProps.onOpen : nextProps.onClose;
+			handler && handler();
+
+		}
+
 		// focus to the selected option
 		if (this.menu && this.focused && this.state.isOpen && !this.hasScrolledToOption) {
 			let focusedOptionNode = ReactDOM.findDOMNode(this.focused);
