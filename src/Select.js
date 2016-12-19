@@ -197,7 +197,6 @@ const Select = React.createClass({
 		}
 	},
 
-
 	componentWillUpdate (nextProps, nextState) {
 		if (nextState.isOpen !== this.state.isOpen) {
 			this.toggleTouchOutsideEvent(nextState.isOpen);
@@ -234,11 +233,15 @@ const Select = React.createClass({
 				}
 			}
 			this._focusedOptionReveal = false;
->>>>>>> 8b00e05be66ab325d572ee3c21f4be90558d6d26
 		}
-	},
 
-	componentDidUpdate (prevProps, prevState) {
+		if (nextState.isOpen !== this.state.isOpen) {
+			this.toggleTouchOutsideEvent(nextState.isOpen);
+			const handler = nextState.isOpen ? nextProps.onOpen : nextProps.onClose;
+			handler && handler();
+
+		}
+
 		// focus to the selected option
 		if (this.menu && this.focused && this.state.isOpen && !this.hasScrolledToOption) {
 			let focusedOptionNode = ReactDOM.findDOMNode(this.focused);
