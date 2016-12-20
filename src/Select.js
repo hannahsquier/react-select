@@ -90,7 +90,7 @@ const Select = React.createClass({
 		onInputKeyDown: React.PropTypes.func,       // input keyDown handler: function (event) {}
 		onMenuScrollToBottom: React.PropTypes.func, // fires when the menu is scrolled to the bottom; can be used to paginate options
 		onOpen: React.PropTypes.func,               // fires when the menu is opened
-		onSelectionFocus: React.PropTypes.func,    // onSelectionFocus handler: function (event) {}
+		onSelectionFocus: React.PropTypes.func,     // onSelectionFocus handler: function (event) {}
 		onValueClick: React.PropTypes.func,         // onClick handler for value labels: function (value, event) {}
 		openAfterFocus: React.PropTypes.bool,       // boolean to enable opening dropdown when focused
 		openOnFocus: React.PropTypes.bool,          // always open options menu on focus
