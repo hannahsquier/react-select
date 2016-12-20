@@ -209,12 +209,6 @@ const Select = React.createClass({
 				this.props.onSelectionFocus(nextState.focusedOption.value);
 			}
 		}
-
-		if(this.props.onSelectionFocus) {
-	      if(nextState.focusedOption && (nextState.focusedOption.value !== (this.state.focusedOption && this.state.focusedOption.value))) {
-        		this.props.onSelectionFocus(nextState.focusedOption.value);
-      		}
- 	  	}
 	},
 
 	componentDidUpdate () {
